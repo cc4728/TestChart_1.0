@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="range_num" >
+        <item name="20"> 左右20道指内寻找</item>
+        <item name="50"> 左右50道指内寻找</item>
+        <item name="100">左右100道指内寻找</item>
+    </string-array>
+
+    <string-array name="range_num_value" >
+        <item name="20"> 1</item>
+        <item name="50"> 2</item>
+        <item name="100"> 3</item>
+    </string-array>
+
+    <string-array name="smooth" >
+        <item name="五点平均法"> 五点平均法</item>
+        <item name="重力平均法"> 重力平均法</item>
+        <item name="最小二乘法"> 最小二乘法</item>
+        <item name="15点平均法"> 十五点平均法</item>
+    </string-array>
+
+    <string-array name="smooth_value" >
+        <item name="average"> 1</item>
+        <item name="gravity"> 2</item>
+        <item name="least_square"> 3</item>
+        <item name="15points"> 4</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity" >
+
+    <item
+        android:id="@+id/open_file"
+        android:title="打开文件"
+        app:showAsAction="always"/>
+
+
+
+
+
+    <item
+        android:id="@+id/Spectrum_data_process"
+        android:title="谱数据处理"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_reset"
+        android:title="Reset chart"
+        app:showAsAction="never"/>
+
+
+    <item
+        android:id="@+id/show_result"
+        android:title="分析结果"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/system_setting"
+        android:title="系统设置"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/data_base"
+        android:title="核素库"
+        app:showAsAction="always" />
+
+
+
+
+</menu>

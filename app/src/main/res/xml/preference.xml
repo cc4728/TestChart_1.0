@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceCategory
+    android:title="谱数据处理"
+    android:key="specture_setting"
+    >
+    <ListPreference
+    android:title="选择谱线平滑方式"
+    android:key="smooth"
+    android:defaultValue="4"
+    android:entryValues="@array/smooth_value"
+    android:entries="@array/smooth"
+    >
+    </ListPreference>
+
+    <EditTextPreference
+        android:title="请寻峰输入基值"
+        android:numeric="integer"
+        android:key="base_num"
+        android:defaultValue="1000"
+        >
+    </EditTextPreference>
+    <ListPreference
+        android:title="选择寻峰区域范围"
+        android:key="range_num"
+        android:defaultValue="2"
+        android:entryValues="@array/range_num_value"
+        android:entries="@array/range_num"
+
+        >
+    </ListPreference>
+
+
+</PreferenceCategory>
+<PreferenceCategory
+    android:title="系统设置"
+    android:key="system_setting"
+
+    >
+
+
+</PreferenceCategory>
+
+</PreferenceScreen>
