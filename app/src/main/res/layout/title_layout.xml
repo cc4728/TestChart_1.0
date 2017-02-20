@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#00bfff"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:text="XRF分析软件"
+        android:gravity="center"
+        android:id="@+id/title_app"
+        />
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:text="文件管理"
+        android:gravity="center"
+        android:id="@+id/title_file"
+        />
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:text="数据处理"
+        android:gravity="center"
+        android:id="@+id/title_process"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:text="系统设置"
+        android:gravity="center"
+        android:id="@+id/title_set"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:text="数据库管理"
+        android:gravity="center"
+        android:id="@+id/title_db"
+        />
+
+</LinearLayout>

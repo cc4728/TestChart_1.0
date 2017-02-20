@@ -1,47 +1,79 @@
 
 package com.caicai.testchart;
-import android.content.SharedPreferences;
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
 
 /**
+ * 1.系统设置主界面
+ * 2.通信状态显示及其其他设置
  * Created by cj on 2016/10/2.
  */
-public class SettingActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-
+public class SettingActivity extends Activity {
+    // 定义界面上的两个文本框
+    EditText input;
+    TextView show;
+    // 定义界面上的一个按钮
+    Button send;
+    Handler handler;
+    // 定义与服务器通信的子线程
+    ClientThread clientThread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preference);
-        SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-        findPreference("base_num").setSummary(sp.getString("base_num", "base_num_default "));
-        findPreference("range_num").setSummary(sp.getString("range_num", "range_num_default "));
-    }
+        setContentView(R.layout.setting_layout);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-    protected void onPause() {
-        super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-    }
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference pref = findPreference(key);
-        if (pref instanceof EditTextPreference) {
-            EditTextPreference etp = (EditTextPreference) pref;
-            pref.setSummary(etp.getText());
-        }
-        if (pref instanceof ListPreference) {
-            ListPreference lp = (ListPreference) pref;
-            pref.setSummary(lp.getEntry());
-        }
+        //input = (EditText) findViewById(R.id.input);
+        send = (Button) findViewById(R.id.send);
+        show = (TextView) findViewById(R.id.show);
+        handler = new Handler() // ②
+        {
+            @Override
+            public void handleMessage(Message msg)
+            {
+                // 如果消息来自于子线程
+                if (msg.what == 0x123)
+                {
+                    // 将读取的内容追加显示在文本框中
+                    show.append("\n" + msg.obj.toString());
+                }
+            }
+        };
+        clientThread = new ClientThread(handler);
+        // 客户端启动ClientThread线程创建网络连接、读取来自服务器的数据
+        new Thread(clientThread).start(); // ①
+        send.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                try
+                {
+                    // 当用户按下发送按钮后，将用户输入的数据封装成Message
+                    // 然后发送给子线程的Handler
+                    Message msg = new Message();
+                    msg.what = 0x345;
+                    msg.obj = input.getText().toString();
+                    clientThread.revHandler.sendMessage(msg);
+                    // 清空input文本框
+                    input.setText("");
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
+
     }
 
 }
