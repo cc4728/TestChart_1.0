@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by cai on 2017/2/14.
@@ -23,15 +24,17 @@ public class DPFrament extends Fragment {
     private SeekBar seekMove, seekRange, seekBase, seekTimes;
     private RadioButton fivePoint, fifPoint, gravity, leastSquare, nonReduce, lineReduce;
     private RadioGroup smoothGrop, reduceGroup;
-    private Button ok;
+    private Button ok,addROI;
     private int[] temp = new int[3051];
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dp_frg_layout, container, false);
         DataProvide dataProvide = new DataProvide();
-        dataProvide.setDefaultData();
+        dataProvide.setDefaultData();//初始化能谱分析设置
         move_show = (TextView) view.findViewById(R.id.move_show);
         reduce_show = (TextView) view.findViewById(R.id.reduce_show);
         smooth_show = (TextView) view.findViewById(R.id.smooth_show);
@@ -48,6 +51,7 @@ public class DPFrament extends Fragment {
         lineReduce = (RadioButton) view.findViewById(R.id.line_reduce);
         smoothGrop = (RadioGroup) view.findViewById(R.id.smooth_group);
         reduceGroup = (RadioGroup) view.findViewById(R.id.reduce_group);
+        addROI=(Button)view.findViewById(R.id.process_add_roi);
         ok = (Button) view.findViewById(R.id.process_ok);
         return view;
     }
@@ -133,7 +137,7 @@ public class DPFrament extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
-                byHand_show.setText("寻峰基值： " + i + ";  范围：" + DataProvide.byHandRange);
+                byHand_show.setText("ROI： Start：" + i *10+ ";  End：" + DataProvide.byHandRange);
             }
 
             @Override
@@ -143,14 +147,14 @@ public class DPFrament extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                DataProvide.byHandBase = seekBase.getProgress();
+                DataProvide.byHandBase = seekBase.getProgress()*10;
 
             }
         });
         seekRange.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                byHand_show.setText("寻峰基值： " + DataProvide.byHandBase + ";  范围：" + i);
+                byHand_show.setText("ROI   Start：" + DataProvide.byHandBase + "; End：" + i*10);
             }
 
             @Override
@@ -160,30 +164,52 @@ public class DPFrament extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                DataProvide.byHandRange = seekRange.getProgress();
+                DataProvide.byHandRange = seekRange.getProgress()*10;
 
             }
         });
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // upDataChart();
+                upDataChart();
+                //更新波形
+            }
+        });
+        addROI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (DataProvide.byHandRange - DataProvide.byHandBase > 0) {
+                    int count=0;
+                    //找出数组为0的索引值
+                    for (int i=0;i<100;i++) {
+                        if (DataProvide.reignOfInteresting[i] == 0) {
+                            count=i;
+                        }
+                        break;
+                    }
+                    DataProvide.reignOfInteresting[count-2]=DataProvide.byHandBase;//左边界
+                    DataProvide.reignOfInteresting[count-1]=DataProvide.byHandRange;//右边界
+                    Toast.makeText(getActivity(),"ROI加入成功！!",Toast.LENGTH_SHORT).show();
+
+                    DataProvide.byHandBase=0;
+                    DataProvide.byHandRange=0;//进入界面，清零，推出界面也清理
+                }else
+                    Toast.makeText(getActivity(),"重新输入，注意开始道指必须小于结束道指",Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-   /* public void upDataChart() {//更新chart
+    public void upDataChart() {//更新chart
         //更新after_smooth[]
         //将flag设置为1，
         DataProvide dataProvide = new DataProvide();
         ChartFragment.flag = 1;
-
-
         if (DataProvide.reduce) {//背景扣除
             temp = dataProvide.reduceBackground(DataProvide.rawValue);
             Log.e("caicai", "数据背景扣除");
-        }
+        } else
+            temp = dataProvide.rawValue;
         if (DataProvide.smoothTimes != 0) {
             int time = DataProvide.smoothTimes;
             while (time > 0) {
@@ -212,6 +238,7 @@ public class DPFrament extends Fragment {
         }
         System.arraycopy(temp, 0, DataProvide.afterSmooth, 0, 3051);
         Log.e("caicai", "更新after Smooth[]成功");
-        getActivity().getFragmentManager().beginTransaction().replace(R.id.container, new ChartFragment());
-    }*/
+        getFragmentManager().beginTransaction().replace(R.id.container,new ChartFragment()).commit();
+        Log.e("caicai", "提交更新的chart");
+    }
 }

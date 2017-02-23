@@ -45,12 +45,12 @@ public class FileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.file_layout, container, false);
-        listView = (ListView) view.findViewById(R.id.list);
+       listView = (ListView) view.findViewById(R.id.list);
         textView = (TextView) view.findViewById(R.id.path);
         parent = (Button) view.findViewById(R.id.parent);
         fileDelete = (Button) view.findViewById(R.id.deleteFile);
         addToChart = (Button) view.findViewById(R.id.addToChart);
-        File root = new File("/storage/sdcard1/Android/mydata");
+        File root = new File("/storage/sdcard1/XRF/mydata");
         if (root.exists()) {
             currentParent = root;
             currentFiles = root.listFiles();
@@ -174,9 +174,9 @@ public class FileFragment extends Fragment {
                     DataProvide.MyPath = path;
                     ChartFragment.flag=0;//显示原始图
                 }
-
-
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.left, new ResultFragment()).commit();
+                getActivity().getFragmentManager().beginTransaction().
+                        replace(R.id.container,new ChartFragment()).
+                        replace(R.id.left, new ResultFragment()).commit();
                 Toast.makeText(getActivity(), "文件加载成功", Toast.LENGTH_SHORT).show();
             }
         });

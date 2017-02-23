@@ -42,6 +42,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
 
     public void insert(String name, int ka, int kb, int la, int lb) {
+
         ContentValues cv = new ContentValues();
         cv.put("name", name);
         cv.put("ka", ka);

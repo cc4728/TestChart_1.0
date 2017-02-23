@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
+
+import java.io.FileNotFoundException;
+
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.LineChartView;
@@ -19,15 +22,18 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 public class MainActivity extends AppCompatActivity {
         FrameLayout frameLayout_left;
+        FrameLayout frameLayout_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        String path = intent.getStringExtra("path");
-        DataProvide.MyPath = path;
+
+
         if (frameLayout_left == null) {
             getFragmentManager().beginTransaction().add(R.id.left, new ResultFragment()).commit();
+        }
+      if (frameLayout_container == null) {
+            getFragmentManager().beginTransaction().add(R.id.container,new ChartFragment()).commit();
         }
         setContentView(R.layout.activity_main);
     }

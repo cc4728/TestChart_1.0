@@ -1,15 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e9e9e9"
     android:orientation="vertical">
 
-    <TextView
+
+
+    <ListView
+        android:layout_alignParentTop="true"
+        android:id="@+id/showDataBase"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:gravity="center"
-        android:text="数据库管理" />
+        android:layout_height="330dp"
+        />
+
+    <EditText
+        android:id="@+id/input_ka"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/showDataBase"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="Kα"
+        android:inputType="number"
+        />
+    <EditText
+        android:id="@+id/input_kb"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/showDataBase"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toEndOf="@+id/input_ka"
+        android:hint="Kβ"
+        android:inputType="number"
+        />
+
+    <EditText
+        android:layout_below="@+id/input_ka"
+        android:id="@+id/input_la"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="Lα"
+        android:inputType="number"
+        />
+
+    <EditText
+        android:layout_below="@+id/input_kb"
+        android:id="@+id/input_lb"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toEndOf="@+id/input_la"
+        android:hint="Lβ"
+        android:inputType="number"
+        />
+    <EditText
+        android:layout_below="@+id/input_lb"
+        android:id="@+id/input_name"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="元素"
+        android:inputType="text"
+        />
 
 
-</LinearLayout>
+
+    <Button
+        android:layout_below="@+id/input_lb"
+        android:id="@+id/db_add"
+        android:text="ADD"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toEndOf="@+id/input_name"
+        />
+
+    <Button
+
+        android:layout_below="@+id/db_add"
+        android:id="@+id/db_search"
+        android:text="搜索"
+        android:layout_width="80dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_below="@+id/db_add"
+        android:id="@+id/db_delete"
+        android:text="删除"
+        android:layout_toEndOf="@+id/db_search"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

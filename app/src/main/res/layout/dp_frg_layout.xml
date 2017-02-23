@@ -87,27 +87,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/byHandShow"
-        android:text="手动寻峰 " />
+        android:text="设置感兴趣区ROI " />
     <SeekBar
         android:id="@+id/seekbar_range"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
-        android:max="100"
+        android:max="300"
         android:progress="0" />
     <SeekBar
         android:id="@+id/seekbar_base"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
-        android:max="100"
+        android:max="300"
         android:progress="0" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        android:id="@+id/process_add_roi"
+        />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="确认"
+        android:text="确定"
         android:id="@+id/process_ok"
         />
+
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.caicai.testchart;
 
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -9,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Manifest;
 
 /**
  * Created by cai on 2017/2/14.
@@ -19,45 +21,59 @@ public class DataProvide {
     public static int [] rawValue=new int[3051];
     public static ArrayList<Integer> peekTop=null;
     public static int [] afterSmooth=new int[3051];
+    public static int [] reignOfInteresting=new int[100];//最多支持50个感兴趣点设置
     public static String MyPath;
-    public final static String DafPath ="/storage/sdcard1/Android/mydata/test.txt";
+    public final static String DafPath ="/storage/sdcard1/XRF/test.txt";
     public static int smoothTimes,moveValue,byHandBase,byHandRange,smoothStyle;
     public final static String[]SMOOTHSTYLE={"","五点平滑","十五点平滑","重力法平滑","最小二乘平滑"};
-    public static boolean reduce,byHand;
+    public static boolean reduce;
+    public static boolean isHightLight;
+
     public DataProvide() {
 
     }
     public  void setDefaultData() {
+        Log.e("caicai", "setdefaulta1");
         getPath(MyPath);//初始化原始数据
+        Log.e("caicai", "setdefaulta2");
         peekTop=null;//初始化峰值数组
         smoothStyle=0;
         smoothTimes=0;
         moveValue=0;
         reduce=false;
-        byHand=false;
+        isHightLight=false;
+        Log.e("caicai", "setdefaulta3");
 
+        Log.e("caicai", "setdefaulta4");
     }
 
 
       //文件读取相关操作
     public int[] getData(String string) {
-        File file = new File(string);
+
+
+
+
         StringBuffer contents = new StringBuffer();
         BufferedReader reader = null;
+        File file = new File(string);
         try {
             reader = new BufferedReader(new FileReader(file));
+            Log.e("caicai", "reader创建");
             String text = null;
             while ((text = reader.readLine()) != null) {
                 contents.append(text);//逐行全部读取，添加到contents
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            Log.e("caicai", "错误：文件没有找到");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
                 if (reader != null) {
                     reader.close();
+                    Log.e("caicai", "关闭读取流");
                 }
             } catch (IOException e) {
                 e.printStackTrace();

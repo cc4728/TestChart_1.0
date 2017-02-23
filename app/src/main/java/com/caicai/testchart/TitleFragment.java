@@ -1,15 +1,16 @@
 package com.caicai.testchart;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.io.File;
 
 /**
  * Created by cai on 2017/2/14.
@@ -46,8 +47,8 @@ public class TitleFragment extends Fragment {
         file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.left, new FileFragment()).commit();
-                Log.e("caicai", "文件管理待开发");
+              getActivity().getFragmentManager().beginTransaction().replace(R.id.left, new FileFragment()).commit();
+
             }
         });
         process.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +72,8 @@ public class TitleFragment extends Fragment {
 
 
     }
+
+
 
 }
 
