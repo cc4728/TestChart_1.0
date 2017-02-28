@@ -25,7 +25,7 @@ public class DPFrament extends Fragment {
     private RadioButton fivePoint, fifPoint, gravity, leastSquare, nonReduce, lineReduce;
     private RadioGroup smoothGrop, reduceGroup;
     private Button ok,addROI;
-    private int[] temp = new int[3051];
+    private int[] temp = new int[DataProvide.rawValue.length];
 
 
 
@@ -178,21 +178,18 @@ public class DPFrament extends Fragment {
         addROI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DataProvide.byHandRange - DataProvide.byHandBase > 0) {
-                    int count=0;
+                if (DataProvide.byHandRange - DataProvide.byHandBase > 0&&DataProvide.byHandRange*DataProvide.byHandBase>0) {
                     //找出数组为0的索引值
                     for (int i=0;i<100;i++) {
                         if (DataProvide.reignOfInteresting[i] == 0) {
-                            count=i;
+                            DataProvide.reignOfInteresting[i] = DataProvide.byHandBase;
+                            DataProvide.reignOfInteresting[i + 1] = DataProvide.byHandRange;
+                            Toast.makeText(getActivity(), "ROI加入成功！!", Toast.LENGTH_SHORT).show();
+                            DataProvide.byHandBase = 0;
+                            DataProvide.byHandRange = 0;//进入界面，清零，推出界面也清理
+                            break;
                         }
-                        break;
                     }
-                    DataProvide.reignOfInteresting[count-2]=DataProvide.byHandBase;//左边界
-                    DataProvide.reignOfInteresting[count-1]=DataProvide.byHandRange;//右边界
-                    Toast.makeText(getActivity(),"ROI加入成功！!",Toast.LENGTH_SHORT).show();
-
-                    DataProvide.byHandBase=0;
-                    DataProvide.byHandRange=0;//进入界面，清零，推出界面也清理
                 }else
                     Toast.makeText(getActivity(),"重新输入，注意开始道指必须小于结束道指",Toast.LENGTH_SHORT).show();
             }
@@ -236,7 +233,7 @@ public class DPFrament extends Fragment {
             //最后一步平移
             temp = dataProvide.moveSpectrum(DataProvide.moveValue, DataProvide.rawValue);
         }
-        System.arraycopy(temp, 0, DataProvide.afterSmooth, 0, 3051);
+        System.arraycopy(temp, 0, DataProvide.afterSmooth, 0, DataProvide.rawValue.length);
         Log.e("caicai", "更新after Smooth[]成功");
         getFragmentManager().beginTransaction().replace(R.id.container,new ChartFragment()).commit();
         Log.e("caicai", "提交更新的chart");

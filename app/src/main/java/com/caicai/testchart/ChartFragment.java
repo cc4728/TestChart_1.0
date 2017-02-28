@@ -28,7 +28,7 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 
 public class ChartFragment extends Fragment {
-    private int[] value = new int[3051];
+    private int[] value = new int[DataProvide.rawValue.length];
     private int vertexNum = value.length;
     private LineChartView chart;
     private LineChartData data;
@@ -36,7 +36,6 @@ public class ChartFragment extends Fragment {
 
     public ChartFragment() {
         Log.e("caicai", "chart构造方法");
-
     }
 
 
@@ -68,12 +67,12 @@ public class ChartFragment extends Fragment {
             Log.e("caicai", "原始图形");
             dp.setDefaultData();
             Log.e("caicai", "initData.setdefaulta");
-            System.arraycopy(DataProvide.rawValue, 0, value, 0, 3051);
+            System.arraycopy(DataProvide.rawValue, 0, value, 0, vertexNum);
             Log.e("caicai", "复制完成数组");
         }
         if (flag == 1 && DataProvide.afterSmooth != null) {
             Log.e("caicai", "平滑后的图形");
-            System.arraycopy(DataProvide.afterSmooth, 0, value, 0, 3051);
+            System.arraycopy(DataProvide.afterSmooth, 0, value, 0, vertexNum);
 
         }
     }
@@ -90,7 +89,7 @@ public class ChartFragment extends Fragment {
             values.add(new PointValue(i, temp[i]));
         }
         Line line = new Line(values);//将一维数组传入组成一条线，应用了线的构造方法
-        Log.e("caicai","创建line");
+        Log.e("caicai", "创建line");
         line.setColor(Color.parseColor("#ADADAD"));//设置line的颜色
         line.setShape(ValueShape.CIRCLE);//已经在前面赋值了
         line.setCubic(false);//设置line的一个画法
@@ -103,27 +102,30 @@ public class ChartFragment extends Fragment {
         lines.add(line);//将这条线添加到线集合
 
 
-        for (int count = 0;DataProvide.reignOfInteresting[count] != 0 && count < 100;  count+=2) {
-            Log.e("caicai","创建兴趣区图形");
-            int left=DataProvide.reignOfInteresting[count];
-            int right=DataProvide.reignOfInteresting[count+1];
+        for (int count = 0; DataProvide.reignOfInteresting[count] != 0 && count < 100; count += 2) {
+            Log.e("caicai", "创建兴趣区图形");
+            int left = DataProvide.reignOfInteresting[count];
+            int right = DataProvide.reignOfInteresting[count + 1];
             List<PointValue> valueOfROI = new ArrayList<>();
-            for (int i=left;i<=right;i++) {
-                valueOfROI.add(new PointValue(i,temp[i]));
+            for (int i = left; i <= right; i++) {
+                valueOfROI.add(new PointValue(i, temp[i]));
             }
-            Line lineOfROi=new Line(valueOfROI);
+            Line lineOfROi = new Line(valueOfROI);
             lineOfROi.setFilled(true);
-            lineOfROi.setHasLines(DataProvide.isHightLight);
+            lineOfROi.setHasLines(true);
             lineOfROi.setHasLabels(false);
             lineOfROi.setHasPoints(false);
             lineOfROi.setCubic(false);
-            if (DataProvide.isHightLight) {
-                Log.e("caicai","高亮显示");
-            }
-            lineOfROi.setColor(ChartUtils.COLOR_RED);
+
+            lineOfROi.setColor(Color.parseColor("#919191"));
             lines.add(lineOfROi);
         }
+        //响应点击事件
+        if (DataProvide.byHandBase != 0 && DataProvide.byHandRange != 0) {//点击对应的兴趣区域则高亮显示
 
+             lines.add( HighLightShow(DataProvide.byHandBase,DataProvide.byHandRange,temp));
+
+        }
 
         setAxis(lines);//设置坐标参数
     }
@@ -147,7 +149,6 @@ public class ChartFragment extends Fragment {
         chart.setLineChartData(data);//chart的一个方法，传入的是数据
     }
 
-
     private void resetViewport() {
         Log.e("caicai", "chart.resetView");
         final Viewport v = new Viewport(chart.getMaximumViewport());
@@ -159,7 +160,7 @@ public class ChartFragment extends Fragment {
             if (maxValue < value[i])
                 maxValue = value[i];
         }
-        v.bottom = minValue - 10;
+        v.bottom = minValue;
         v.top = maxValue + 10;//y轴最大坐标值
         v.left = 0;//只能显示七个点，12-5，
         v.right = vertexNum + 10;
@@ -169,14 +170,22 @@ public class ChartFragment extends Fragment {
 
 
     //高亮显示一个感兴趣区，短按
-    private void HighLightShow(int start, int end) {
-        int temp[] = new int[end - start + 1];
+    private Line HighLightShow(int left, int right, int[] temp) {
 
-
+        List<PointValue> valueOfROI = new ArrayList<>();
+        for (int i = left; i <= right; i++) {
+            valueOfROI.add(new PointValue(i, temp[i]));
+        }
+        Line lineOfROi = new Line(valueOfROI);
+        lineOfROi.setFilled(true);
+        lineOfROi.setHasLines(true);
+        lineOfROi.setHasLabels(true);
+        lineOfROi.setHasPoints(false);
+        lineOfROi.setCubic(false);
+        lineOfROi.setColor(Color.parseColor("#cd0000"));
+        lineOfROi.setAreaTransparency(100);
+        return lineOfROi;
     }
 
-    //低亮显示所有设置感兴趣区
-    private void LowLightShow(int[] select) {
 
-    }
 }

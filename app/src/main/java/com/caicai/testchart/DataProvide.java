@@ -3,14 +3,21 @@ package com.caicai.testchart;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.jar.Manifest;
+
+import lecho.lib.hellocharts.model.Line;
 
 /**
  * Created by cai on 2017/2/14.
@@ -18,111 +25,92 @@ import java.util.jar.Manifest;
  */
 
 public class DataProvide {
-    public static int [] rawValue=new int[3051];
-    public static ArrayList<Integer> peekTop=null;
-    public static int [] afterSmooth=new int[3051];
-    public static int [] reignOfInteresting=new int[100];//最多支持50个感兴趣点设置
+    public final static int NUMBERPOINT=2048;
+    public static int[] rawValue = new int[NUMBERPOINT];
+    public static ArrayList<Integer> peekTop = null;
+    public static int[] afterSmooth = new int[NUMBERPOINT];
+    public static int[] reignOfInteresting = new int[100];//最多支持50个感兴趣点设置
     public static String MyPath;
-    public final static String DafPath ="/storage/sdcard1/XRF/test.txt";
-    public static int smoothTimes,moveValue,byHandBase,byHandRange,smoothStyle;
-    public final static String[]SMOOTHSTYLE={"","五点平滑","十五点平滑","重力法平滑","最小二乘平滑"};
+    public final static String DafPath = "/storage/sdcard1/XRF/2017.2.23.txt";
+    public static int smoothTimes, moveValue, byHandBase, byHandRange, smoothStyle;
+    public final static String[] SMOOTHSTYLE = {"", "五点平滑", "十五点平滑", "重力法平滑", "最小二乘平滑"};
     public static boolean reduce;
-    public static boolean isHightLight;
+    public static int addFile = 0;//标记加载文件
+    public final static String FILEKEYWORD="<<DATA>>";
 
     public DataProvide() {
 
     }
-    public  void setDefaultData() {
+
+    public void setDefaultData() {
         Log.e("caicai", "setdefaulta1");
-        getPath(MyPath);//初始化原始数据
+        if (addFile == 0) {
+            rawValue = getData(DafPath);
+            addFile = -1;
+        }
+        if (addFile == 1) {
+            rawValue = getData(MyPath);
+            addFile = -1;
+        }
         Log.e("caicai", "setdefaulta2");
-        peekTop=null;//初始化峰值数组
-        smoothStyle=0;
-        smoothTimes=0;
-        moveValue=0;
-        reduce=false;
-        isHightLight=false;
+        peekTop = null;//初始化峰值数组
+        smoothStyle = 0;
+        smoothTimes = 0;
+        moveValue = 0;
+        reduce = false;
         Log.e("caicai", "setdefaulta3");
 
         Log.e("caicai", "setdefaulta4");
     }
 
 
-      //文件读取相关操作
+    //文件读取相关操作
+    //InputStreamReader read = new InputStreamReader(new FileInputStream(f),"GBK");
     public int[] getData(String string) {
-
-
-
-
-        StringBuffer contents = new StringBuffer();
-        BufferedReader reader = null;
-        File file = new File(string);
+        //测试inputStreamReader
+        int[] arrayNum = new int[NUMBERPOINT];
+        String[]totalString=new String[NUMBERPOINT+80];
+        int lineNumber=1;
+        String lineString=null;
+        int fileKeyLine=-1;
+        BufferedReader bufferedReader=null;
         try {
-            reader = new BufferedReader(new FileReader(file));
-            Log.e("caicai", "reader创建");
-            String text = null;
-            while ((text = reader.readLine()) != null) {
-                contents.append(text);//逐行全部读取，添加到contents
+             bufferedReader=new BufferedReader(new FileReader(string));
+            lineString=bufferedReader.readLine();
+            while (lineString != null) {
+                lineNumber++;
+                lineString=bufferedReader.readLine();
+                if (lineString.equals(FILEKEYWORD))
+                {
+                    fileKeyLine=lineNumber+1;
+                }
+                totalString[lineNumber]=lineString;
+                if (lineString.equals("<<END>>")) {
+                    break;
+                }
             }
+            Log.e("caicai", String.valueOf(fileKeyLine));
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Log.e("caicai", "错误：文件没有找到");
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                    Log.e("caicai", "关闭读取流");
+        }finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
-        String data_string = contents.toString();//混合字符串
-        String[] dataArray = data_string.split("\\s+");//以空格键为分隔符，放入字符串数组
-        List<String> listx = new ArrayList<String>();
-        List<String> listy = new ArrayList<String>();
-        for (int i = 0; i < dataArray.length; i++) {
-            if (i % 2 == 0) {
-                listy.add(dataArray[i]);
-            } else {
-                listx.add(dataArray[i]);
-            }
-        }//将x，y坐标存放在ArrayList里面
-        //将list转化为字符串数组，得到最终结果
-        String[] x = new String[listx.size()];
-        x = listx.toArray(x);//x坐标字符串数组
-        String[] y = new String[listy.size()];
-        y = listy.toArray(y);//y坐标字符串数组
-        //去掉空格
-        List<String> tmp = new ArrayList<String>();
-        for (String str : y) {
-            if (str != null && str.length() != 0) {
-                tmp.add(str);
-            }
+        int k=fileKeyLine+NUMBERPOINT;
+        for (int i=fileKeyLine;i<k;i++) {
+            arrayNum[i-fileKeyLine]=Integer.parseInt(totalString[i]);
         }
-        y = tmp.toArray(new String[0]);
 
-        rawValue = StringToInt(y);//转为整数数组，终极结果，哈哈，成功
-        return rawValue;
-    }
 
-    public int[] StringToInt(String[] arrs) {
-        int[] ints = new int[arrs.length];
-        for (int i = 0; i < arrs.length; i++) {
-            ints[i] = Integer.parseInt(arrs[i]);
-        }
-        return ints;
-    }
-
-    public  void getPath(String path) {
-
-        if (path == null) {
-            rawValue = getData(DafPath);
-        } else {
-            rawValue = getData(MyPath);
-        }
+        return arrayNum;
     }
 
     //数据处理相关操作
@@ -220,7 +208,7 @@ public class DataProvide {
     private void searchPeak(int[] ints) {
         for (int i = 7; i < ints.length - 2; i++) {
             if (ints[i] > 80 && ints[i] > ints[i + 1] && ints[i] > ints[i + 2] && ints[i] > ints[i - 1] && ints[i] > ints[i - 2]) {
-                int j=0;
+                int j = 0;
                 peekTop.add(ints[i]);
             }
         }

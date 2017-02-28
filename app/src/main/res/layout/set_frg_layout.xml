@@ -10,6 +10,12 @@
         android:layout_height="20dp"
         android:gravity="center"
         android:text="系统设置" />
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        />
 
 
 </LinearLayout>

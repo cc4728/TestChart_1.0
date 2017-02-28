@@ -30,22 +30,24 @@
         <Button android:id="@+id/addToChart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:text="载入" />
 
 
         <Button android:id="@+id/parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:text="返回"
             />
 
         <Button android:id="@+id/deleteFile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:text="删除"
+            />
+        <Button android:id="@+id/saveFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存"
             />
 
 
